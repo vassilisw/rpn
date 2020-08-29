@@ -6,21 +6,41 @@
 
 void usage() {
 	std::cout <<
-		"Usage:\n"
-		"  –w <fname>  File to write to\n"
-		"  –h          Show help\n";
+		"USAGE:\n"
+		"  rpn                Launch in interactive mode\n"
+		"  rpn [expression]   Evaluate an one-line expression\n\n"
+		"RC FILE:\n"
+		"  rpn will execute the contents of ~/.rpnrc at startup if it exists.\n";
 }
 
-void interactive() {
-	Rpn rpn;
+void executeFile(Rpn& aRpn, std::string aFilePath) {
+	std::vector<std::string> fileLines;
+
+	if (!readFileToVector(aFilePath, fileLines)) {
+		std::cout << "file: '" << aFilePath << "' not found\n";
+		return;
+	}
+
+	std::cout << "executing file: '" << aFilePath << "'\n";
+	for (auto& s : fileLines) {
+		try {
+			aRpn.parse(s);
+		}
+		catch (const char* e) {
+			std::cout << e << std::endl;
+		}
+	}
+}
+
+void interactive(Rpn& aRpn) {
 	std::string userInput;
 	while (true) {
 		try {
-			rpn.presentPrompt();
+			aRpn.presentPrompt();
 			std::getline(std::cin, userInput);
 			if (userInput == CMD_EXIT)
 				break;
-			rpn.parse(userInput);
+			aRpn.parse(userInput);
 		}
 		catch (const char* e) {
 			std::cout << e << std::endl;
@@ -31,8 +51,13 @@ void interactive() {
 int main(int argc, char *argv[]) {
 	initRandom();
 
+	Rpn rpn;
+	auto rcfile = userDir() + separator() + ".rpnrc";
+	if (fileExists(rcfile))
+		executeFile(rpn, rcfile);
+
 	if (argc == 1) {
-		interactive();
+		interactive(rpn);
 	}
 	else
 	if (strcmp(argv[1], "-h") == 0) {
@@ -41,7 +66,6 @@ int main(int argc, char *argv[]) {
 	}
 	else {
 		// one shot
-		Rpn rpn;
 		rpn.interactive = false;
 		rpn.parse(argv[1]);
 		rpn.presentPrompt();
