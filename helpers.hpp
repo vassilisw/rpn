@@ -5,13 +5,18 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <stdlib.h>
 #include <time.h>
 #include <fstream>
+#include <stdlib.h>
+#include <unistd.h>
 
 
 inline void initRandom() {
 	srand(time(NULL));
+}
+
+inline bool stdinIsTerminal() {
+	return isatty(fileno(stdin));
 }
 
 inline char separator() {
@@ -54,7 +59,7 @@ inline bool readFileToVector(const std::string& aFilename, std::vector<std::stri
 
 inline std::vector<std::string> splitString(const std::string& aStr, char aDelimiter) {
 	std::vector<std::string> tokens;
-	tokens.reserve(10);
+	tokens.reserve(20);
 	std::string token;
 	std::istringstream tokenStream(aStr);
 	while (std::getline(tokenStream, token, aDelimiter)) {
