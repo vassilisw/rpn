@@ -70,6 +70,8 @@ void Rpn::fBlnot() {
 void Rpn::fNoteq() {
 	if (mStack.size() < 2) throw "(!=) stack error";
 
+	auto values = popNVectorElements(mStack, 2);
+	mStack.emplace_back(values.at(0) != values.at(1));
 }
 
 void Rpn::fMod() {
@@ -96,7 +98,7 @@ void Rpn::fDec() {
 }
 
 void Rpn::fRand() {
-	// better randomness needed ?!
+	// better randomization needed ?!
 	mStack.emplace_back(rand());
 }
 
@@ -109,7 +111,15 @@ void Rpn::fcPI() {
 }
 
 void Rpn::fsPick() {
+	if (mStack.size() < 1) throw "(pick) stack error";
 
+	auto v1 = mStack.back();
+	mStack.pop_back();
+	if (mStack.size() < v1) throw "(pick) stack error";
+
+	auto v2 = *(mStack.begin() + v1-1);
+	mStack.erase(mStack.begin() + v1-1);
+	mStack.emplace_back(v2);
 }
 
 void Rpn::fsRepeat() {
@@ -124,11 +134,18 @@ void Rpn::fsDepth() {
 }
 
 void Rpn::fsDrop() {
-
+	if (mStack.size() < 1) throw "(drop) stack error";
+	mStack.pop_back();
 }
 
 void Rpn::fsDropn() {
+	if (mStack.size() < 1) throw "(dropn) stack error";
 
+	auto v1 = mStack.back();
+	mStack.pop_back();
+	if (mStack.size() < v1) throw "(dropn) stack error";
+
+	mStack.erase(mStack.end() - v1, mStack.end());
 }
 
 void Rpn::fsDup() {
@@ -156,7 +173,7 @@ void Rpn::fsStack() {
 void Rpn::fsSwap() {
 	if (mStack.size() < 2) throw "(swap) stack error";
 
-	std::iter_swap(mStack.end()-1, mStack.end()-2); /// std::prev
+	std::iter_swap(mStack.end()-1, mStack.end()-2);
 }
 
 void Rpn::fdHex() {
@@ -257,6 +274,7 @@ void Rpn::parse(const std::string& aStr) {
 	for (auto& s : vElements) {
 		if (s.empty()) continue;
 
+		// input in functions
 		auto funcIt = mFunctions.find(s);
 		if (funcIt != mFunctions.end()) {
 			int repeat = mRepeat;
@@ -266,12 +284,14 @@ void Rpn::parse(const std::string& aStr) {
 				(this->*func)();
 		}
 		else
+		// input is number
 		if (isNumber(s)) {
 			for (int i = 0; i < mRepeat; ++i)
 				mStack.emplace_back(std::stod(s));
 			mRepeat = 1;
 		}
 		else
+		// input is variable assignment (e.g. x=)
 		if (hasVariable(s)) {
 			if (mStack.size() < 1) throw "variable stack error";
 			if (mFunctions.find(s) != mFunctions.end()) throw "reserved keyword";
@@ -280,6 +300,7 @@ void Rpn::parse(const std::string& aStr) {
 			mStack.pop_back();
 		}
 		else
+		// input in variables stack
 		if (isVariable(s, value)) {
 			mStack.emplace_back(value);
 		}
