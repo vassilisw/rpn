@@ -7,10 +7,49 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
 
 
 inline void initRandom() {
 	srand(time(NULL));
+}
+
+inline char separator() {
+	#ifdef _WIN32
+	return '\\';
+	#else
+	return '/';
+	#endif
+}
+
+inline std::string userDir() {
+	char homedir[PATH_MAX];
+	#ifdef _WIN32
+	snprintf(homedir, PATH_MAX, "%s%s", getenv("HOMEDRIVE"), getenv("HOMEPATH"));
+	#else
+	snprintf(homedir, PATH_MAX, "%s", getenv("HOME"));
+	#endif
+
+	return std::string(homedir);
+}
+
+inline bool fileExists(const std::string& aFilePath) {
+    std::ifstream inFile(aFilePath);
+    return inFile.good();
+}
+
+inline bool readFileToVector(const std::string& aFilename, std::vector<std::string>& outStrings) {
+	std::ifstream file(aFilename);
+	if(!file) return false;
+
+	std::string str;
+	while (std::getline(file, str)) {
+		// Line contains string of length > 0 then save it in vector
+		if(str.size() > 0) outStrings.push_back(str);
+	}
+
+	file.close();
+	return true;
 }
 
 inline std::vector<std::string> splitString(const std::string& aStr, char aDelimiter) {
