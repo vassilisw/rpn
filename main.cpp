@@ -32,9 +32,10 @@ void executeFile(Rpn& aRpn, std::string aFilePath) {
 	}
 }
 
-void interactive(Rpn& aRpn) {
+void loopParse(Rpn& aRpn) {
+	aRpn.interactive = stdinIsTerminal();
 	std::string userInput;
-	while (true) {
+	while (!std::cin.eof()) {
 		try {
 			aRpn.presentPrompt();
 			std::getline(std::cin, userInput);
@@ -56,8 +57,9 @@ int main(int argc, char *argv[]) {
 	if (fileExists(rcfile))
 		executeFile(rpn, rcfile);
 
-	if (argc == 1) {
-		interactive(rpn);
+	if (argc == 1 || !stdinIsTerminal()) {
+		// i.e. interactice or pipe input
+		loopParse(rpn);
 	}
 	else
 	if (strcmp(argv[1], "-h") == 0) {
@@ -66,8 +68,14 @@ int main(int argc, char *argv[]) {
 	}
 	else {
 		// one shot
-		rpn.interactive = false;
-		rpn.parse(argv[1]);
+		try {
+			rpn.parse(argv[1]);
+		}
+		catch (const char* e) {
+			std::cout << e << std::endl;
+			return EXIT_FAILURE;
+		}
+
 		rpn.presentPrompt();
 		std::cout << std::endl;
 	}

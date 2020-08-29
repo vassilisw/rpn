@@ -66,7 +66,7 @@ class Rpn {
 
 
   public:
-  	bool interactive = true;
+	bool interactive = false;
 
 	Rpn(const Rpn&) = delete;
 	Rpn& operator=(const Rpn&) = delete;
@@ -74,6 +74,7 @@ class Rpn {
 	Rpn();
 	virtual ~Rpn();
 
+	void setMode(RpnMode aMode);
 	void presentPrompt();
 	void parse(const std::string& aStr);
 };

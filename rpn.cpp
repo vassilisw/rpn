@@ -217,6 +217,10 @@ Rpn::~Rpn() {
 	
 }
 
+void Rpn::setMode(RpnMode aMode) {
+	mMode = aMode;
+}
+
 void Rpn::presentPrompt() {
 	if (mVars.size()) std::cout << "[ ";
 
@@ -251,6 +255,8 @@ void Rpn::parse(const std::string& aStr) {
 	std::vector<std::string> vElements = splitString(aStr, ' ');
 	double value;
 	for (auto& s : vElements) {
+		if (s.empty()) continue;
+
 		auto funcIt = mFunctions.find(s);
 		if (funcIt != mFunctions.end()) {
 			int repeat = mRepeat;
