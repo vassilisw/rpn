@@ -17,17 +17,17 @@ void executeFile(Rpn& aRpn, std::string aFilePath) {
 	std::vector<std::string> fileLines;
 
 	if (!readFileToVector(aFilePath, fileLines)) {
-		std::cout << "file: '" << aFilePath << "' not found\n";
+		std::cerr << "file: '" << aFilePath << "' not found\n";
 		return;
 	}
 
-	std::cout << "executing file: '" << aFilePath << "'\n";
+	std::cerr << "executing file: '" << aFilePath << "'\n";
 	for (auto& s : fileLines) {
 		try {
 			aRpn.parse(s);
 		}
 		catch (const char* e) {
-			std::cout << e << std::endl;
+			std::cerr << e << std::endl;
 		}
 	}
 }
@@ -44,7 +44,7 @@ void loopParse(Rpn& aRpn) {
 			aRpn.parse(userInput);
 		}
 		catch (const char* e) {
-			std::cout << e << std::endl;
+			std::cerr << e << std::endl;
 		}
 	}
 }
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 			rpn.parse(argv[1]);
 		}
 		catch (const char* e) {
-			std::cout << e << std::endl;
+			std::cerr << e << std::endl;
 			return EXIT_FAILURE;
 		}
 
