@@ -50,6 +50,12 @@ void loopParse(Rpn& aRpn) {
 }
 
 int main(int argc, char *argv[]) {
+	// no need for getopts()
+	if (argc > 1 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)) {
+		usage();
+		return EXIT_SUCCESS;
+	}
+
 	initRandom();
 
 	Rpn rpn;
@@ -60,11 +66,6 @@ int main(int argc, char *argv[]) {
 	if (argc == 1 || !stdinIsTerminal()) {
 		// i.e. interactice or pipe input
 		loopParse(rpn);
-	}
-	else
-	if (strcmp(argv[1], "-h") == 0) {
-		usage();
-		exit(EXIT_SUCCESS);
 	}
 	else {
 		// one shot
