@@ -7,6 +7,7 @@
 #include <string>
 
 #define CMD_EXIT    "exit"
+#define CMD_MACRO   "macro"
 
 class Rpn;
 
@@ -18,9 +19,11 @@ enum RpnMode { rpnmHex, rpnmDec, rpnmBin, rpnmOct };
 
 class Rpn {
   private:
+  	bool mVerticalStack = false;
 	RpnMode mMode = rpnmDec;
 	RpnFuncMap mFunctions;
 	std::map<std::string, double> mVars;
+	std::map<std::string, std::string> mMacros;
 	std::vector<double> mStack;
 	int mRepeat = 1;
 	bool hasVariable(std::string& aStr);
@@ -64,6 +67,7 @@ class Rpn {
 	void fdBin();
 	void fdOct();
 
+	void macroDefine(const std::vector<std::string>& elements);
 
   public:
 	bool interactive = false;
@@ -74,7 +78,6 @@ class Rpn {
 	Rpn();
 	virtual ~Rpn();
 
-	void setMode(RpnMode aMode);
 	void presentPrompt();
 	void parse(const std::string& aStr);
 };

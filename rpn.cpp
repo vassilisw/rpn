@@ -167,7 +167,7 @@ void Rpn::fsRolld() {
 }
 
 void Rpn::fsStack() {
-
+	mVerticalStack = !mVerticalStack;
 }
 
 void Rpn::fsSwap() {
@@ -192,6 +192,31 @@ void Rpn::fdOct() {
 	mMode = rpnmOct;
 }
 
+// if called with just CMD_MACRO, will just display defined macros
+void Rpn::macroDefine(const std::vector<std::string>& elements) {
+	std::stringstream macro;
+	std::string macroName;
+	auto itMacro = std::find(elements.begin(), elements.end(), CMD_MACRO);
+	for (auto it = ++itMacro; it != elements.end(); ++it) {
+		if (it->empty()) continue;
+
+		if (macroName.empty()) {
+			if (mFunctions.find(*it) != mFunctions.end()) throw (*it + ": reserved keyword").c_str();
+
+			macroName = *it;
+			continue;
+		}
+
+		macro << *it << " ";
+	}
+
+	if (!macroName.empty() && !macro.str().empty())
+		mMacros[macroName] = macro.str();
+
+	if (macroName.empty())
+		for (auto& s : mMacros)
+			std::cout << s.first << ": " << s.second << std::endl;
+}
 
 // ------------------------------------------------------------------
 // public
@@ -234,33 +259,30 @@ Rpn::~Rpn() {
 	
 }
 
-void Rpn::setMode(RpnMode aMode) {
-	mMode = aMode;
-}
-
 void Rpn::presentPrompt() {
 	if (mVars.size()) std::cout << "[ ";
+	std::string eline = mVerticalStack ? "\n" : " ";
 
 	switch (mMode) {
 		case rpnmHex:
-			for (auto& n : mVars) std::cout << std::hex << n.first << "=" << (int)n.second << " ";
-			if (mVars.size()) std::cout << "] ";
-			for (auto& n : mStack) std::cout << std::hex << (int)n << " ";
+			for (auto& n : mVars) std::cout << std::hex << n.first << "=" << (int)n.second << eline;
+			if (mVars.size()) std::cout << "]" << eline;
+			for (auto& n : mStack) std::cout << std::hex << (int)n << eline;
 			break;
 		case rpnmDec:
-			for (auto& n : mVars) std::cout << std::dec << n.first << "=" << n.second << " ";
-			if (mVars.size()) std::cout << "] ";
-			for (auto& n : mStack) std::cout << std::dec << n << " ";
+			for (auto& n : mVars) std::cout << std::dec << n.first << "=" << n.second << eline;
+			if (mVars.size()) std::cout << "]" << eline;
+			for (auto& n : mStack) std::cout << std::dec << n << eline;
 			break;
 		case rpnmBin:
-			for (auto& n : mVars) std::cout << n.first << "=" << std::bitset<16>(n.second).to_string() << " ";
-			if (mVars.size()) std::cout << "] ";
-			for (auto& n : mStack) std::cout << std::bitset<16>(n).to_string() << " ";
+			for (auto& n : mVars) std::cout << n.first << "=" << std::bitset<16>(n.second).to_string() << eline;
+			if (mVars.size()) std::cout << "]" << eline;
+			for (auto& n : mStack) std::cout << std::bitset<16>(n).to_string() << eline;
 			break;
 		case rpnmOct:
-			for (auto& n : mVars) std::cout << std::oct << n.first << "=" << (int)n.second << " ";
-			if (mVars.size()) std::cout << "] ";		
-			for (auto& n : mStack) std::cout << std::oct << (int)n << " ";
+			for (auto& n : mVars) std::cout << std::oct << n.first << "=" << (int)n.second << eline;
+			if (mVars.size()) std::cout << "]" << eline;
+			for (auto& n : mStack) std::cout << std::oct << (int)n << eline;
 			break;
 	}
 
@@ -303,6 +325,22 @@ void Rpn::parse(const std::string& aStr) {
 		// input in variables stack
 		if (isVariable(s, value)) {
 			mStack.emplace_back(value);
+		}
+		else
+		// input is macro definition
+		if (s == CMD_MACRO) {
+			macroDefine(vElements);
+			break;
+		}
+		else
+		// input in macros stack
+		if (mMacros.find(s) != mMacros.end()) {
+			std::string m1;
+			std::string macroStr = m1 = mMacros.find(s)->second;
+			for (int i = 1; i < mRepeat; ++i)
+				macroStr.append(m1);
+			mRepeat = 1;
+			parse(macroStr);
 		}
 		else {
 			throw "unknown command";
