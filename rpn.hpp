@@ -84,7 +84,7 @@ class Rpn {
 	Rpn();
 	virtual ~Rpn();
 
-	void presentPrompt();
+	virtual void presentPrompt();
 	void parse(const std::string& aStr);
 };
 

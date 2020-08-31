@@ -79,7 +79,6 @@ int main(int argc, char *argv[]) {
 		}
 
 		rpn.presentPrompt();
-		std::cout << std::endl;
 	}
 
 	return EXIT_SUCCESS;
