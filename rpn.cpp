@@ -79,7 +79,7 @@ void Rpn::fMod() {
 	if (mStack.size() < 2) throw "(%) stack error";
 
 	auto values = popNVectorElements(mStack, 2);
-	mStack.emplace_back((int)values.at(0) % (int)values.at(1));
+	mStack.emplace_back((long long)values.at(0) % (long long)values.at(1));
 }
 
 void Rpn::fInc() {
@@ -273,9 +273,9 @@ void Rpn::presentPrompt() {
 			std::cout << std::dec << n.first << "=0b" << std::bitset<16>(n.second).to_string() << eline;
 		else
 		if (mMode == rpnmHex)
-			std::cout << std::hex << n.first << "=0x" << (int)n.second << eline;
+			std::cout << std::hex << n.first << "=0x" << (long long)n.second << eline;
 		else // oct
-			std::cout << std::oct << n.first << "=0o" << (int)n.second << eline;
+			std::cout << std::oct << n.first << "=0o" << (long long)n.second << eline;
 	}
 
 	if (mVars.size() && !mVerticalStack)
@@ -289,9 +289,9 @@ void Rpn::presentPrompt() {
 			std::cout << std::dec << "0b" << std::bitset<16>(n).to_string() << eline;
 		else
 		if (mMode == rpnmHex)
-			std::cout << std::hex << "0x" << (int)n << eline;
+			std::cout << std::hex << "0x" << (long long)n << eline;
 		else // oct
-			std::cout << std::oct << "0o" << (int)n << eline;
+			std::cout << std::oct << "0o" << (long long)n << eline;
 	}
 
 	// end lines, cli prompt, reset to dec
