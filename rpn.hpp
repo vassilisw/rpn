@@ -1,6 +1,7 @@
 #ifndef __RPN_HPP__
 #define __RPN_HPP__
 
+#include "consts.hpp"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -28,6 +29,10 @@ class Rpn {
 	int mRepeat = 1;
 	bool hasVariable(std::string& aStr);
 	bool isVariable(const std::string& aStr, double& value);
+
+	std::string varPrefix() { return std::string((stdoutTerminal ? CLR : "")) + "[ " + (stdoutTerminal ? RST : ""); };
+	std::string varSuffix() { return std::string((stdoutTerminal ? CLR : "")) + "]" + (stdoutTerminal ? RST : ""); };
+	std::string cliSuffix() { return std::string((stdoutTerminal ? CLR : "")) + "> " + (stdoutTerminal ? RST : ""); };
 
 	// functions
 	void fAdd();
@@ -71,6 +76,7 @@ class Rpn {
 
   public:
 	bool interactive = false;
+	bool stdoutTerminal = true;
 
 	Rpn(const Rpn&) = delete;
 	Rpn& operator=(const Rpn&) = delete;

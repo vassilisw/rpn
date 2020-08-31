@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
 	initRandom();
 
 	Rpn rpn;
+	rpn.stdoutTerminal = isatty(fileno(stdout));
 	auto rcfile = userDir() + separator() + ".rpnrc";
 	if (fileExists(rcfile))
 		executeFile(rpn, rcfile);

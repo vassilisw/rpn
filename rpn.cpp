@@ -261,7 +261,7 @@ Rpn::~Rpn() {
 }
 
 void Rpn::presentPrompt() {
-	if (mVars.size() && !mVerticalStack) std::cout << "[ ";
+	if (mVars.size() && !mVerticalStack) std::cout << varPrefix();
 	std::string eline = mVerticalStack ? "\n" : " ";
 
 	// print the stacks
@@ -279,7 +279,7 @@ void Rpn::presentPrompt() {
 	}
 
 	if (mVars.size() && !mVerticalStack)
-		std::cout << "]" << eline;
+		std::cout << varSuffix() << eline;
 
 	for (auto& n : mStack) {
 		if (mMode == rpnmDec)
@@ -297,7 +297,7 @@ void Rpn::presentPrompt() {
 	// end lines, cli prompt, reset to dec
 	std::cout << std::dec;
 	if (interactive)
-		std::cout << "> ";
+		std::cout << cliSuffix();
 	else
 		if (mVars.size() || mStack.size())
 			std::cout << std::endl;
