@@ -260,34 +260,46 @@ Rpn::~Rpn() {
 }
 
 void Rpn::presentPrompt() {
-	if (mVars.size()) std::cout << "[ ";
+	if (mVars.size() && !mVerticalStack) std::cout << "[ ";
 	std::string eline = mVerticalStack ? "\n" : " ";
 
-	switch (mMode) {
-		case rpnmHex:
-			for (auto& n : mVars) std::cout << std::hex << n.first << "=" << (int)n.second << eline;
-			if (mVars.size()) std::cout << "]" << eline;
-			for (auto& n : mStack) std::cout << std::hex << (int)n << eline;
-			break;
-		case rpnmDec:
-			for (auto& n : mVars) std::cout << std::dec << n.first << "=" << n.second << eline;
-			if (mVars.size()) std::cout << "]" << eline;
-			for (auto& n : mStack) std::cout << std::dec << n << eline;
-			break;
-		case rpnmBin:
-			for (auto& n : mVars) std::cout << n.first << "=" << std::bitset<16>(n.second).to_string() << eline;
-			if (mVars.size()) std::cout << "]" << eline;
-			for (auto& n : mStack) std::cout << std::bitset<16>(n).to_string() << eline;
-			break;
-		case rpnmOct:
-			for (auto& n : mVars) std::cout << std::oct << n.first << "=" << (int)n.second << eline;
-			if (mVars.size()) std::cout << "]" << eline;
-			for (auto& n : mStack) std::cout << std::oct << (int)n << eline;
-			break;
+	// print the stacks
+	for (auto& n : mVars) {
+		if (mMode == rpnmDec)
+			std::cout << std::dec << n.first << "=" << n.second << eline;
+		else
+		if (mMode == rpnmBin)
+			std::cout << std::dec << n.first << "=0b" << std::bitset<16>(n.second).to_string() << eline;
+		else
+		if (mMode == rpnmHex)
+			std::cout << std::hex << n.first << "=0x" << (int)n.second << eline;
+		else // oct
+			std::cout << std::oct << n.first << "=0o" << (int)n.second << eline;
 	}
 
+	if (mVars.size() && !mVerticalStack)
+		std::cout << "]" << eline;
+
+	for (auto& n : mStack) {
+		if (mMode == rpnmDec)
+			std::cout << std::dec << n << eline;
+		else
+		if (mMode == rpnmBin)
+			std::cout << std::dec << "0b" << std::bitset<16>(n).to_string() << eline;
+		else
+		if (mMode == rpnmHex)
+			std::cout << std::hex << "0x" << (int)n << eline;
+		else // oct
+			std::cout << std::oct << "0o" << (int)n << eline;
+	}
+
+	// end lines, cli prompt, reset to dec
 	std::cout << std::dec;
-	if (interactive) std::cout << "> ";
+	if (interactive)
+		std::cout << "> ";
+	else
+		if (mVars.size() || mStack.size())
+			std::cout << std::endl;
 }
 
 void Rpn::parse(const std::string& aStr) {
