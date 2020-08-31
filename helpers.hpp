@@ -94,4 +94,42 @@ inline std::vector<T> popNVectorElements(std::vector<T>& vec, int aCount) {
 	// mStack.emplace_back(v1 + v2);
 }
 
+inline long long fromBin(long long n) {
+	long long factor = 1;
+	long long total = 0;
+
+	while (n != 0) {
+		total += (n % 10) * factor;
+		n /= 10;
+		factor *= 2;
+	}
+
+	return total;
+}
+
+inline std::string handleInputBase(const std::string& aStr) {
+	if (aStr.size() < 3) return aStr;
+
+	auto trim = [](const std::string& s) { return s.substr(2, s.size()-2); };
+
+	std::stringstream ss;
+	try {
+		if (aStr.find("0x") == 0)
+			ss << std::stoll(trim(aStr), nullptr, 16);
+		else
+		if (aStr.find("0o") == 0)
+			ss << std::stoll(trim(aStr), nullptr, 8);
+		else
+		if (aStr.find("0b") == 0)
+			ss << fromBin(std::stoll(trim(aStr)));
+		else
+			return aStr;
+	}
+	catch (...) {
+		throw "convertion error";
+	}
+
+	return ss.str();
+}
+
 #endif

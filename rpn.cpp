@@ -1,5 +1,6 @@
 #include "rpn.hpp"
 #include "helpers.hpp"
+#include <iomanip>
 
 
 // ------------------------------------------------------------------
@@ -305,8 +306,10 @@ void Rpn::presentPrompt() {
 void Rpn::parse(const std::string& aStr) {
 	std::vector<std::string> vElements = splitString(aStr, ' ');
 	double value;
-	for (auto& s : vElements) {
-		if (s.empty()) continue;
+	for (auto& elm : vElements) {
+		if (elm.empty()) continue;
+
+		auto s = handleInputBase(elm);
 
 		// input in functions
 		auto funcIt = mFunctions.find(s);
