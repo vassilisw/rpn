@@ -48,6 +48,7 @@ class Rpn {
 	void fInc();
 	void fDec();
 	void fRand();
+	void fFact();
 
 	// constants
 	void fcE();

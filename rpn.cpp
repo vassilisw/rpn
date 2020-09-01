@@ -103,6 +103,16 @@ void Rpn::fRand() {
 	mStack.emplace_back(rand());
 }
 
+void Rpn::fFact() {
+	if (mStack.size() < 1) throw "(fact) stack error";
+
+	auto v1 = mStack.back();
+	if (v1 < 1) throw "factorial error";
+
+	mStack.pop_back();
+	mStack.emplace_back(std::stod(factorial(v1)));
+}
+
 void Rpn::fcE() {
 	mStack.emplace_back(M_E);
 }
@@ -236,6 +246,7 @@ Rpn::Rpn() {
 	mFunctions.emplace("++",     &Rpn::fInc);
 	mFunctions.emplace("--",     &Rpn::fDec);
 	mFunctions.emplace("rand",   &Rpn::fRand);
+	mFunctions.emplace("fact",   &Rpn::fFact);
 	mFunctions.emplace("e",      &Rpn::fcE);
 	mFunctions.emplace("pi",     &Rpn::fcPI);
 	mFunctions.emplace("pick",   &Rpn::fsPick);
