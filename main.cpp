@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 	else {
 		// one shot
 		try {
-			rpn.parse(argv[1]);
+			rpn.parse((joinStrings(std::vector<std::string>(argv + 1, argv + argc), " ")));
 		}
 		catch (const char* e) {
 			std::cerr << e << std::endl;
