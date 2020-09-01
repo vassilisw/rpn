@@ -8,7 +8,8 @@ CPPFLAGS = -std=c++11
 all: rpn
 
 rpn: $(LIB_FILES)
-	clang++ -o $@ $(CPPFLAGS) $(LIB_FILES)
+	$(CXX) -o $@ $(CPPFLAGS) $(LIB_FILES)
+	# *** for the reviewer: Please check README ***
 
 install: rpn
 	install -d $(DESTDIR)$(PREFIX)/bin/
