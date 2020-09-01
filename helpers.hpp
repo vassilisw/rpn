@@ -69,6 +69,20 @@ inline std::vector<std::string> splitString(const std::string& aStr, char aDelim
 	return tokens;
 }
 
+inline std::string joinStrings(const std::vector<std::string>& elements, const std::string& separator) {
+	switch (elements.size()) {
+		case 0:
+			return "";
+		case 1:
+			return elements[0];
+		default:
+			std::stringstream ss;
+			for (const auto& s : elements)
+				ss << s << separator;
+			return ss.str();
+	}
+}
+
 inline bool isNumber(const std::string& aStr) {
 	return aStr.find_first_not_of("-.0123456789") == std::string::npos;
 }
@@ -131,5 +145,28 @@ inline std::string handleInputBase(const std::string& aStr) {
 
 	return ss.str();
 }
+
+// ** Ask me about this thing **
+inline std::string factorial(int num) {
+	std::stringstream ss;
+	std::vector<int> res;
+	res.push_back(1);
+	int carry = 0;
+	for (int i = 2; i <= num; i++) {
+		for(int j = 0; j < res.size(); j++) {
+			int tmp = res[j] * i;
+			res[j] = (tmp+carry) % 10 ;
+			carry = (tmp+carry) / 10;
+		}
+		while(carry != 0){
+			res.push_back(carry % 10);
+			carry = carry / 10;
+		}
+	}
+
+	for(int i = res.size()-1; i >= 0; i--) ss << res[i];
+	return ss.str();
+}
+
 
 #endif
