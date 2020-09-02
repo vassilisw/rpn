@@ -107,7 +107,9 @@ void Rpn::fFact() {
 	if (mStack.size() < 1) throw "(fact) stack error";
 
 	auto v1 = mStack.back();
-	if (v1 < 1) throw "factorial error";
+	if (v1 < 1) throw "factorial error: negative number";
+
+	std::cerr << "ask me about this" << std::endl;
 
 	mStack.pop_back();
 	mStack.emplace_back(std::stod(factorial(v1)));
@@ -166,15 +168,42 @@ void Rpn::fsDup() {
 }
 
 void Rpn::fsDupn() {
+	if (mStack.size() < 1) throw "(dupn) stack error";
 
+	auto v1 = mStack.back();
+	mStack.pop_back();
+	if (mStack.size() < v1) throw "(dupn) stack error";
+
+	auto values = mStack;
+	mStack.insert(mStack.end(), mStack.end() - v1, mStack.end());
 }
 
 void Rpn::fsRoll() {
+	if (mStack.size() < 1) throw "(roll) stack error";
 
+	auto v1 = mStack.back();
+	mStack.pop_back();
+	if (mStack.size() < 2) return;
+
+	for (int i = 0; i < (int)v1; ++i) {
+		auto v2 = mStack.front();
+		mStack.erase(mStack.begin());
+		mStack.emplace_back(v2);
+	}
 }
 
 void Rpn::fsRolld() {
+	if (mStack.size() < 1) throw "(roll) stack error";
 
+	auto v1 = mStack.back();
+	mStack.pop_back();
+	if (mStack.size() < 2) return;
+
+	for (int i = 0; i < (int)v1; ++i) {
+		auto v2 = mStack.back();
+		mStack.pop_back();
+		mStack.insert(mStack.begin(), v2);
+	}
 }
 
 void Rpn::fsStack() {
