@@ -42,6 +42,7 @@ class Rpn {
 	void fCla();
 	void fClr();
 	void fClv();
+	void fSetPrec();
 	void fRand();
 	void fFact();
 

@@ -2,6 +2,7 @@
 #include "helpers.hpp"
 #include <iomanip>
 #include <cmath>
+#include <algorithm>
 
 
 // ------------------------------------------------------------------
@@ -87,6 +88,15 @@ void Rpn::fClr() {
 
 void Rpn::fClv() {
 	mVars.clear();
+}
+
+void Rpn::fSetPrec() {
+	if (mStack.size() < 1) throw "(prec) stack error";
+
+	auto v1 = ++mStack.back();
+	mStack.pop_back();
+	std::cout << std::setprecision(std::max(2, (int)v1));
+	if (v1 < 3) throw "min precision (1) set";
 }
 
 void Rpn::fRand() {
@@ -256,6 +266,7 @@ Rpn::Rpn() {
 	mFunctions.emplace("cla",    &Rpn::fCla);
 	mFunctions.emplace("clr",    &Rpn::fClr);
 	mFunctions.emplace("clv",    &Rpn::fClv);
+	mFunctions.emplace("prec",   &Rpn::fSetPrec);
 	mFunctions.emplace("rand",   &Rpn::fRand);
 	mFunctions.emplace("fact",   &Rpn::fFact);
 	mFunctions.emplace("e",      &Rpn::fcE);
