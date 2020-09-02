@@ -9,5 +9,6 @@
 #define RST "\033[0m"
 #define CLR (YLW)
 
+extern const std::string HelpString;
 
 #endif

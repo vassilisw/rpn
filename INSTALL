@@ -1,0 +1,12 @@
+Requirements:
+c++11
+
+Use one of the following to compile:
+  $ make # system default compiler
+  $ make CXX=g++
+  $ make CXX=clang++
+
+and/or to install:
+  $ make install
+
+for FreeBSD use `gmake` instead

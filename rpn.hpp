@@ -69,6 +69,7 @@ class Rpn {
 	void fdBin();
 	void fdOct();
 
+	void foHelp();
 	void macroDefine(const std::vector<std::string>& elements);
 
   public:

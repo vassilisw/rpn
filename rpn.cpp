@@ -233,6 +233,11 @@ void Rpn::fdOct() {
 	mMode = rpnmOct;
 }
 
+void Rpn::foHelp() {
+	std::cout << HelpString << std::endl;
+
+}
+
 // if called with just CMD_MACRO, will just display defined macros
 void Rpn::macroDefine(const std::vector<std::string>& elements) {
 	std::stringstream macro;
@@ -286,6 +291,7 @@ Rpn::Rpn() {
 	mFunctions.emplace("dec",    &Rpn::fdDec);
 	mFunctions.emplace("bin",    &Rpn::fdBin);
 	mFunctions.emplace("oct",    &Rpn::fdOct);
+	mFunctions.emplace("help",   &Rpn::foHelp);
 
 }
 
