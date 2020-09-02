@@ -29,28 +29,19 @@ class Rpn {
 	int mRepeat = 1;
 	bool hasVariable(std::string& aStr);
 	bool isVariable(const std::string& aStr, double& value);
-	bool checkStack(int reqSize, const std::string& aError, std::vector<double>& outElems);
+	bool popStack(int reqSize, const std::string& aError, std::vector<double>& outElems);
 
 	std::string varPrefix() { return std::string((stdoutTerminal ? CLR : "")) + "[ " + (stdoutTerminal ? RST : ""); };
 	std::string varSuffix() { return std::string((stdoutTerminal ? CLR : "")) + "]" + (stdoutTerminal ? RST : ""); };
 	std::string cliSuffix() { return std::string((stdoutTerminal ? CLR : "")) + "> " + (stdoutTerminal ? RST : ""); };
 
-	// an alternative approach
-	double operation(const std::string& aOper);
+	// an alternative approach handling operations
+	bool operation(const std::string& aOper);
 
 	// functions
-	void fAdd();
-	void fSub();
-	void fMul();
-	void fDiv();
 	void fCla();
 	void fClr();
 	void fClv();
-	void fBlnot();
-	void fNoteq();
-	void fMod();
-	void fInc();
-	void fDec();
 	void fRand();
 	void fFact();
 
