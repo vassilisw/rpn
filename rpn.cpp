@@ -1,10 +1,58 @@
 #include "rpn.hpp"
 #include "helpers.hpp"
 #include <iomanip>
+#include <cmath>
 
 
 // ------------------------------------------------------------------
 // private
+
+bool Rpn::checkStack(int reqSize, const std::string& aError, std::vector<double>& outElems) {
+	if (mStack.size() < reqSize)
+		throw (aError + " stack error!").c_str();
+
+	outElems.reserve(reqSize);
+	outElems.insert(outElems.begin(), mStack.end() - reqSize, mStack.end());
+	mStack.erase(mStack.end() - reqSize, mStack.end());
+	return true;
+}
+
+double Rpn::operation(const std::string& aOper) {
+	std::vector<double> elems;
+	double res;
+
+	if      (aOper == "~"    && checkStack(1, "~", elems))     res = ~(long long)elems.at(0);
+	else if (aOper == "&"    && checkStack(2, "&", elems))     res = (long long)elems.at(0) & (long long)elems.at(1);
+	else if (aOper == "|"    && checkStack(2, "|", elems))     res = (long long)elems.at(0) | (long long)elems.at(1);
+	else if (aOper == "^"    && checkStack(2, "^", elems))     res = (long long)elems.at(0) ^ (long long)elems.at(1);
+	else if (aOper == "<<"   && checkStack(2, "<<", elems))    res = (long long)elems.at(0) << (long long)elems.at(1);
+	else if (aOper == ">>"   && checkStack(2, ">>", elems))    res = (long long)elems.at(0) >> (long long)elems.at(1);
+	else if (aOper == "<"    && checkStack(2, "<", elems))     res = elems.at(0) < elems.at(1);
+	else if (aOper == ">"    && checkStack(2, ">", elems))     res = elems.at(0) > elems.at(1);
+	else if (aOper == "&&"   && checkStack(2, "&&", elems))    res = elems.at(0) && elems.at(1);
+	else if (aOper == "||"   && checkStack(2, "||", elems))    res = elems.at(0) || elems.at(1);
+	else if (aOper == "^^"   && checkStack(2, "^^", elems))    res = !elems.at(0) != !elems.at(1);
+	else if (aOper == "<="   && checkStack(2, "<=", elems))    res = elems.at(0) <= elems.at(1);
+	else if (aOper == "=="   && checkStack(2, "==", elems))    res = elems.at(0) == elems.at(1);
+	else if (aOper == ">="   && checkStack(2, ">=", elems))    res = elems.at(0) >= elems.at(1);
+	else if (aOper == "acos" && checkStack(1, "acos", elems))  res = acos(elems.at(0));
+	else if (aOper == "asin" && checkStack(1, "asin", elems))  res = asin(elems.at(0));
+	else if (aOper == "atan" && checkStack(1, "atan", elems))  res = atan(elems.at(0));
+	else if (aOper == "cos"  && checkStack(1, "cos", elems))   res = cos(elems.at(0));
+	else if (aOper == "cosh" && checkStack(1, "cosh", elems))  res = cosh(elems.at(0));
+	else if (aOper == "sin"  && checkStack(1, "sin", elems))   res = sin(elems.at(0));
+	else if (aOper == "sinh" && checkStack(1, "sinh", elems))  res = sinh(elems.at(0));
+	else if (aOper == "tanh" && checkStack(1, "tanh", elems))  res = tanh(elems.at(0));
+	else if (aOper == "exp"  && checkStack(1, "exp", elems))   res = exp(elems.at(0));
+	else if (aOper == "sqrt" && checkStack(1, "sqrt", elems))  res = sqrt(elems.at(0));
+	else if (aOper == "ln"   && checkStack(1, "ln", elems))    res = log(elems.at(0));
+	else if (aOper == "log"  && checkStack(1, "log", elems))   res = log10(elems.at(0));
+	else if (aOper == "pow"  && checkStack(2, "pow", elems))   res = pow(elems.at(0), elems.at(1));
+	else return false;
+
+	mStack.emplace_back(res);
+	return true;
+}
 
 bool Rpn::hasVariable(std::string& aStr) {
 	bool res = aStr.size() && (aStr.back() == '=');
@@ -359,6 +407,14 @@ void Rpn::parse(const std::string& aStr) {
 			auto func = funcIt->second;
 			for (int i = 0; i < repeat; ++i)
 				(this->*func)();
+		}
+		else
+		// alternative approach (without func pointers) - more readable
+		if (operation(s)) {
+			int repeat = mRepeat;
+			mRepeat = 1;
+			for (int i = 1; i < repeat; ++i)
+				operation(s);
 		}
 		else
 		// input is number
