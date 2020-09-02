@@ -69,13 +69,17 @@ class Rpn {
 	void fdBin();
 	void fdOct();
 
+	// other
 	void foHelp();
+
+	// special
 	void macroDefine(const std::vector<std::string>& elements);
 
   public:
 	bool interactive = false;
 	bool stdoutTerminal = true;
 
+	// gain attention just in case
 	Rpn(const Rpn&) = delete;
 	Rpn& operator=(const Rpn&) = delete;
 

@@ -91,12 +91,13 @@ void Rpn::fClv() {
 }
 
 void Rpn::fSetPrec() {
-	if (mStack.size() < 1) throw "(prec) stack error";
-
+	if (mStack.size() < 1)
+		throw "(prec) stack error";
 	auto v1 = ++mStack.back();
 	mStack.pop_back();
 	std::cout << std::setprecision(std::max(2, (int)v1));
-	if (v1 < 3) throw "min precision (1) set";
+	if (v1 < 3)
+		throw "min precision (1) set";
 }
 
 void Rpn::fRand() {
@@ -105,10 +106,11 @@ void Rpn::fRand() {
 }
 
 void Rpn::fFact() {
-	if (mStack.size() < 1) throw "(fact) stack error";
-
+	if (mStack.size() < 1)
+		throw "(fact) stack error";
 	auto v1 = mStack.back();
-	if (v1 < 1) throw "factorial error: negative number";
+	if (v1 < 1)
+		throw "factorial error: negative number";
 
 	std::cerr << "ask me about this" << std::endl;
 
@@ -125,11 +127,12 @@ void Rpn::fcPI() {
 }
 
 void Rpn::fsPick() {
-	if (mStack.size() < 1) throw "(pick) stack error";
-
+	if (mStack.size() < 1)
+		throw "(pick) stack error";
 	auto v1 = mStack.back();
 	mStack.pop_back();
-	if (mStack.size() < v1) throw "(pick) stack error";
+	if (mStack.size() < v1)
+		throw "(pick) stack error";
 
 	auto v2 = *(mStack.begin() + v1-1);
 	mStack.erase(mStack.begin() + v1-1);
@@ -137,8 +140,8 @@ void Rpn::fsPick() {
 }
 
 void Rpn::fsRepeat() {
-	if (mStack.size() < 1) throw "(repeat) stack error";
-
+	if (mStack.size() < 1)
+		throw "(repeat) stack error";
 	mRepeat = mStack.back();
 	mStack.pop_back();
 }
@@ -148,40 +151,43 @@ void Rpn::fsDepth() {
 }
 
 void Rpn::fsDrop() {
-	if (mStack.size() < 1) throw "(drop) stack error";
+	if (mStack.size() < 1)
+		throw "(drop) stack error";
 	mStack.pop_back();
 }
 
 void Rpn::fsDropn() {
-	if (mStack.size() < 1) throw "(dropn) stack error";
-
+	if (mStack.size() < 1)
+		throw "(dropn) stack error";
 	auto v1 = mStack.back();
 	mStack.pop_back();
-	if (mStack.size() < v1) throw "(dropn) stack error";
+	if (mStack.size() < v1)
+		throw "(dropn) stack error";
 
 	mStack.erase(mStack.end() - v1, mStack.end());
 }
 
 void Rpn::fsDup() {
-	if (mStack.size() < 1) throw "(dup) stack error";
-
+	if (mStack.size() < 1)
+		throw "(dup) stack error";
 	mStack.emplace_back(mStack.back());
 }
 
 void Rpn::fsDupn() {
-	if (mStack.size() < 1) throw "(dupn) stack error";
-
+	if (mStack.size() < 1)
+		throw "(dupn) stack error";
 	auto v1 = mStack.back();
 	mStack.pop_back();
-	if (mStack.size() < v1) throw "(dupn) stack error";
+	if (mStack.size() < v1)
+		throw "(dupn) stack error";
 
 	auto values = mStack;
 	mStack.insert(mStack.end(), mStack.end() - v1, mStack.end());
 }
 
 void Rpn::fsRoll() {
-	if (mStack.size() < 1) throw "(roll) stack error";
-
+	if (mStack.size() < 1)
+		throw "(roll) stack error";
 	auto v1 = mStack.back();
 	mStack.pop_back();
 	if (mStack.size() < 2) return;
@@ -194,8 +200,8 @@ void Rpn::fsRoll() {
 }
 
 void Rpn::fsRolld() {
-	if (mStack.size() < 1) throw "(roll) stack error";
-
+	if (mStack.size() < 1)
+		throw "(roll) stack error";
 	auto v1 = mStack.back();
 	mStack.pop_back();
 	if (mStack.size() < 2) return;
@@ -212,8 +218,8 @@ void Rpn::fsStack() {
 }
 
 void Rpn::fsSwap() {
-	if (mStack.size() < 2) throw "(swap) stack error";
-
+	if (mStack.size() < 2)
+		throw "(swap) stack error";
 	std::iter_swap(mStack.end()-1, mStack.end()-2);
 }
 
@@ -246,19 +252,22 @@ void Rpn::macroDefine(const std::vector<std::string>& elements) {
 	for (auto it = ++itMacro; it != elements.end(); ++it) {
 		if (it->empty()) continue;
 
+		// give macro its name
 		if (macroName.empty()) {
-			if (mFunctions.find(*it) != mFunctions.end()) throw (*it + ": reserved keyword").c_str();
-
+			if (mFunctions.find(*it) != mFunctions.end())
+				throw (*it + ": reserved keyword").c_str();
 			macroName = *it;
 			continue;
 		}
 
+		// building macro string
 		macro << *it << " ";
 	}
 
 	if (!macroName.empty() && !macro.str().empty())
 		mMacros[macroName] = macro.str();
 
+	// just show defined macros
 	if (macroName.empty())
 		for (auto& s : mMacros)
 			std::cout << s.first << ": " << s.second << std::endl;
@@ -300,7 +309,8 @@ Rpn::~Rpn() {
 }
 
 void Rpn::presentPrompt() {
-	if (mVars.size() && !mVerticalStack) std::cout << varPrefix();
+	if (mVars.size() && !mVerticalStack)
+		std::cout << varPrefix();
 	std::string eline = mVerticalStack ? "\n" : " ";
 
 	// print the stacks
@@ -377,8 +387,10 @@ void Rpn::parse(const std::string& aStr) {
 		else
 		// input is variable assignment (e.g. x=)
 		if (hasVariable(s)) {
-			if (mStack.size() < 1) throw "variable stack error";
-			if (mFunctions.find(s) != mFunctions.end()) throw "reserved keyword";
+			if (mStack.size() < 1)
+				throw "variable stack error";
+			if (mFunctions.find(s) != mFunctions.end())
+				throw "reserved keyword";
 
 			mVars[s] = mStack.back();
 			mStack.pop_back();
