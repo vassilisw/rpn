@@ -20,7 +20,7 @@ bool Rpn::popStack(int reqSize, const std::string& aError, std::vector<double>& 
 
 bool Rpn::operation(const std::string& aOper) {
 	std::vector<double> elems;
-	double res;
+	double res, ipart;
 
 	if      (aOper == "%"    && popStack(2, "%", elems))     res = (long long)elems.at(0) % (long long)elems.at(1);
 	else if (aOper == "+"    && popStack(2, "+", elems))     res = elems.at(0) + elems.at(1);
@@ -58,6 +58,14 @@ bool Rpn::operation(const std::string& aOper) {
 	else if (aOper == "sqrt" && popStack(1, "sqrt", elems))  res = sqrt(elems.at(0));
 	else if (aOper == "ln"   && popStack(1, "ln", elems))    res = log(elems.at(0));
 	else if (aOper == "log"  && popStack(1, "log", elems))   res = log10(elems.at(0));
+	else if (aOper == "ceil" && popStack(1, "ceil", elems))  res = ceil(elems.at(0));
+	else if (aOper == "fp"   && popStack(1, "fp", elems))    res = modf(elems.at(0), &ipart);
+	else if (aOper == "abs"  && popStack(1, "abs", elems))   res = abs(elems.at(0));
+	else if (aOper == "max"  && popStack(2, "max", elems))   res = std::max(elems.at(0), elems.at(1));
+	else if (aOper == "min"  && popStack(2, "min", elems))   res = std::min(elems.at(0), elems.at(1));
+	else if (aOper == "floor" && popStack(1, "floor", elems)) res = floor(elems.at(0));
+	else if (aOper == "round" && popStack(1, "round", elems)) res = round(elems.at(0));
+	else if (aOper == "ip"   && popStack(1, "ip", elems)) { modf(elems.at(0), &ipart); res = ipart; }
 	else return false;
 
 	mStack.emplace_back(res);
