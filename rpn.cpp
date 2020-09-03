@@ -292,6 +292,8 @@ bool Rpn::operation(const std::string& aOper) {
 // public
 
 Rpn::Rpn() {
+	std::cout << std::setprecision(7);
+
 	mFunctions.emplace("cla",    &Rpn::fCla);
 	mFunctions.emplace("clr",    &Rpn::fClr);
 	mFunctions.emplace("clv",    &Rpn::fClv);
