@@ -51,7 +51,6 @@ const std::string HelpString =
 	"  round      Round\n"
 	"  ip         Integer part\n"
 	"  fp         Floating part\n"
-	"  sign       Push -1, 0, or 0 depending on the sign\n"
 	"  abs        Absolute value\n"
 	"  max        Max\n"
 	"  min        Min\n\n"
@@ -90,11 +89,11 @@ const std::string HelpString =
 	"Macros and Variables:\n"
 	"  macro      Defines a macro, e.g. 'macro kib 1024 *'\n"
 	"  macro      show macros (with no args)\n"
-	"  x=         Assigns a variable, e.g. '1024 x=''\n\n"
+	"  x=         Assigns a variable, e.g. '1024 x='\n\n"
 
 	"Other:\n"
-	"  help       Print the help message\n"
-	"  prec       Set precision\n"
+	"  help       Print this message\n"
+	"  prec       Set precision, e.g. '4 prec'\n"
 	"  exit       Exit the calculator\n\n"
 	;
 
