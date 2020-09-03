@@ -70,6 +70,7 @@ class Rpn {
 	void fdOct();
 
 	// other
+	void foPrintKeywords();
 	void foHelp();
 
 	// special

@@ -247,6 +247,12 @@ void Rpn::fdOct() {
 	mMode = rpnmOct;
 }
 
+void Rpn::foPrintKeywords() {
+	for (auto& it : mFunctions)
+		std::cout << it.first << ", ";
+	std::cout << std::endl;
+}
+
 void Rpn::foHelp() {
 	std::cout << HelpString << std::endl;
 
@@ -308,6 +314,7 @@ Rpn::Rpn() {
 	mFunctions.emplace("dec",    &Rpn::fdDec);
 	mFunctions.emplace("bin",    &Rpn::fdBin);
 	mFunctions.emplace("oct",    &Rpn::fdOct);
+	mFunctions.emplace("keys",   &Rpn::foPrintKeywords);
 	mFunctions.emplace("help",   &Rpn::foHelp);
 
 }
