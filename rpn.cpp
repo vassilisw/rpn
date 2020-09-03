@@ -8,70 +8,6 @@
 // ------------------------------------------------------------------
 // private
 
-bool Rpn::popStack(int reqSize, const std::string& aError, std::vector<double>& outElems) {
-	if (mStack.size() < reqSize)
-		throw (std::string("(") + aError + ") stack error").c_str();
-
-	outElems.reserve(reqSize);
-	outElems.insert(outElems.begin(), mStack.end() - reqSize, mStack.end());
-	mStack.erase(mStack.end() - reqSize, mStack.end());
-	return true;
-}
-
-bool Rpn::operation(const std::string& aOper) {
-	std::vector<double> elems;
-	double res, ipart;
-
-	if      (aOper == "%"    && popStack(2, "%", elems))     res = (long long)elems.at(0) % (long long)elems.at(1);
-	else if (aOper == "+"    && popStack(2, "+", elems))     res = elems.at(0) + elems.at(1);
-	else if (aOper == "-"    && popStack(2, "-", elems))     res = elems.at(0) - elems.at(1);
-	else if (aOper == "*"    && popStack(2, "*", elems))     res = elems.at(0) * elems.at(1);
-	else if (aOper == "/"    && popStack(2, "/", elems))     res = elems.at(0) / elems.at(1);
-	else if (aOper == "!="   && popStack(2, "!=", elems))    res = elems.at(0) != elems.at(1);
-	else if (aOper == "++"   && popStack(1, "++", elems))    res = ++elems.at(0);
-	else if (aOper == "--"   && popStack(1, "--", elems))    res = --elems.at(0);
-	else if (aOper == "!"    && popStack(1, "!", elems))     res = !elems.at(0);
-	else if (aOper == "~"    && popStack(1, "~", elems))     res = ~(long long)elems.at(0);
-	else if (aOper == "&"    && popStack(2, "&", elems))     res = (long long)elems.at(0) & (long long)elems.at(1);
-	else if (aOper == "|"    && popStack(2, "|", elems))     res = (long long)elems.at(0) | (long long)elems.at(1);
-	else if (aOper == "^"    && popStack(2, "^", elems))     res = (long long)elems.at(0) ^ (long long)elems.at(1);
-	else if (aOper == "<<"   && popStack(2, "<<", elems))    res = (long long)elems.at(0) << (long long)elems.at(1);
-	else if (aOper == ">>"   && popStack(2, ">>", elems))    res = (long long)elems.at(0) >> (long long)elems.at(1);
-	else if (aOper == "<"    && popStack(2, "<", elems))     res = elems.at(0) < elems.at(1);
-	else if (aOper == ">"    && popStack(2, ">", elems))     res = elems.at(0) > elems.at(1);
-	else if (aOper == "&&"   && popStack(2, "&&", elems))    res = elems.at(0) && elems.at(1);
-	else if (aOper == "||"   && popStack(2, "||", elems))    res = elems.at(0) || elems.at(1);
-	else if (aOper == "^^"   && popStack(2, "^^", elems))    res = !elems.at(0) != !elems.at(1);
-	else if (aOper == "<="   && popStack(2, "<=", elems))    res = elems.at(0) <= elems.at(1);
-	else if (aOper == "=="   && popStack(2, "==", elems))    res = elems.at(0) == elems.at(1);
-	else if (aOper == ">="   && popStack(2, ">=", elems))    res = elems.at(0) >= elems.at(1);
-	else if (aOper == "pow"  && popStack(2, "pow", elems))   res = pow(elems.at(0), elems.at(1));
-	else if (aOper == "acos" && popStack(1, "acos", elems))  res = acos(elems.at(0));
-	else if (aOper == "asin" && popStack(1, "asin", elems))  res = asin(elems.at(0));
-	else if (aOper == "atan" && popStack(1, "atan", elems))  res = atan(elems.at(0));
-	else if (aOper == "cos"  && popStack(1, "cos", elems))   res = cos(elems.at(0));
-	else if (aOper == "cosh" && popStack(1, "cosh", elems))  res = cosh(elems.at(0));
-	else if (aOper == "sin"  && popStack(1, "sin", elems))   res = sin(elems.at(0));
-	else if (aOper == "sinh" && popStack(1, "sinh", elems))  res = sinh(elems.at(0));
-	else if (aOper == "tanh" && popStack(1, "tanh", elems))  res = tanh(elems.at(0));
-	else if (aOper == "exp"  && popStack(1, "exp", elems))   res = exp(elems.at(0));
-	else if (aOper == "sqrt" && popStack(1, "sqrt", elems))  res = sqrt(elems.at(0));
-	else if (aOper == "ln"   && popStack(1, "ln", elems))    res = log(elems.at(0));
-	else if (aOper == "log"  && popStack(1, "log", elems))   res = log10(elems.at(0));
-	else if (aOper == "ceil" && popStack(1, "ceil", elems))  res = ceil(elems.at(0));
-	else if (aOper == "fp"   && popStack(1, "fp", elems))    res = modf(elems.at(0), &ipart);
-	else if (aOper == "abs"  && popStack(1, "abs", elems))   res = abs(elems.at(0));
-	else if (aOper == "max"  && popStack(2, "max", elems))   res = std::max(elems.at(0), elems.at(1));
-	else if (aOper == "min"  && popStack(2, "min", elems))   res = std::min(elems.at(0), elems.at(1));
-	else if (aOper == "floor" && popStack(1, "floor", elems)) res = floor(elems.at(0));
-	else if (aOper == "round" && popStack(1, "round", elems)) res = round(elems.at(0));
-	else if (aOper == "ip"   && popStack(1, "ip", elems)) { modf(elems.at(0), &ipart); res = ipart; }
-	else return false;
-
-	mStack.emplace_back(res);
-	return true;
-}
-
 bool Rpn::hasVariable(std::string& aStr) {
 	bool res = aStr.size() && (aStr.back() == '=');
 	if (res) aStr.pop_back();
@@ -285,6 +221,70 @@ void Rpn::macroDefine(const std::vector<std::string>& elements) {
 	if (macroName.empty())
 		for (auto& s : mMacros)
 			std::cout << s.first << ": " << s.second << std::endl;
+}
+
+bool Rpn::popStack(int reqSize, const std::string& aError, std::vector<double>& outElems) {
+	if (mStack.size() < reqSize)
+		throw (std::string("(") + aError + ") stack error").c_str();
+
+	outElems.reserve(reqSize);
+	outElems.insert(outElems.begin(), mStack.end() - reqSize, mStack.end());
+	mStack.erase(mStack.end() - reqSize, mStack.end());
+	return true;
+}
+
+bool Rpn::operation(const std::string& aOper) {
+	std::vector<double> elems;
+	double res, ipart;
+
+	if      (aOper == "%"    && popStack(2, "%", elems))     res = (long long)elems.at(0) % (long long)elems.at(1);
+	else if (aOper == "+"    && popStack(2, "+", elems))     res = elems.at(0) + elems.at(1);
+	else if (aOper == "-"    && popStack(2, "-", elems))     res = elems.at(0) - elems.at(1);
+	else if (aOper == "*"    && popStack(2, "*", elems))     res = elems.at(0) * elems.at(1);
+	else if (aOper == "/"    && popStack(2, "/", elems))     res = elems.at(0) / elems.at(1);
+	else if (aOper == "!="   && popStack(2, "!=", elems))    res = elems.at(0) != elems.at(1);
+	else if (aOper == "++"   && popStack(1, "++", elems))    res = ++elems.at(0);
+	else if (aOper == "--"   && popStack(1, "--", elems))    res = --elems.at(0);
+	else if (aOper == "!"    && popStack(1, "!", elems))     res = !elems.at(0);
+	else if (aOper == "~"    && popStack(1, "~", elems))     res = ~(long long)elems.at(0);
+	else if (aOper == "&"    && popStack(2, "&", elems))     res = (long long)elems.at(0) & (long long)elems.at(1);
+	else if (aOper == "|"    && popStack(2, "|", elems))     res = (long long)elems.at(0) | (long long)elems.at(1);
+	else if (aOper == "^"    && popStack(2, "^", elems))     res = (long long)elems.at(0) ^ (long long)elems.at(1);
+	else if (aOper == "<<"   && popStack(2, "<<", elems))    res = (long long)elems.at(0) << (long long)elems.at(1);
+	else if (aOper == ">>"   && popStack(2, ">>", elems))    res = (long long)elems.at(0) >> (long long)elems.at(1);
+	else if (aOper == "<"    && popStack(2, "<", elems))     res = elems.at(0) < elems.at(1);
+	else if (aOper == ">"    && popStack(2, ">", elems))     res = elems.at(0) > elems.at(1);
+	else if (aOper == "&&"   && popStack(2, "&&", elems))    res = elems.at(0) && elems.at(1);
+	else if (aOper == "||"   && popStack(2, "||", elems))    res = elems.at(0) || elems.at(1);
+	else if (aOper == "^^"   && popStack(2, "^^", elems))    res = !elems.at(0) != !elems.at(1);
+	else if (aOper == "<="   && popStack(2, "<=", elems))    res = elems.at(0) <= elems.at(1);
+	else if (aOper == "=="   && popStack(2, "==", elems))    res = elems.at(0) == elems.at(1);
+	else if (aOper == ">="   && popStack(2, ">=", elems))    res = elems.at(0) >= elems.at(1);
+	else if (aOper == "pow"  && popStack(2, "pow", elems))   res = pow(elems.at(0), elems.at(1));
+	else if (aOper == "acos" && popStack(1, "acos", elems))  res = acos(elems.at(0));
+	else if (aOper == "asin" && popStack(1, "asin", elems))  res = asin(elems.at(0));
+	else if (aOper == "atan" && popStack(1, "atan", elems))  res = atan(elems.at(0));
+	else if (aOper == "cos"  && popStack(1, "cos", elems))   res = cos(elems.at(0));
+	else if (aOper == "cosh" && popStack(1, "cosh", elems))  res = cosh(elems.at(0));
+	else if (aOper == "sin"  && popStack(1, "sin", elems))   res = sin(elems.at(0));
+	else if (aOper == "sinh" && popStack(1, "sinh", elems))  res = sinh(elems.at(0));
+	else if (aOper == "tanh" && popStack(1, "tanh", elems))  res = tanh(elems.at(0));
+	else if (aOper == "exp"  && popStack(1, "exp", elems))   res = exp(elems.at(0));
+	else if (aOper == "sqrt" && popStack(1, "sqrt", elems))  res = sqrt(elems.at(0));
+	else if (aOper == "ln"   && popStack(1, "ln", elems))    res = log(elems.at(0));
+	else if (aOper == "log"  && popStack(1, "log", elems))   res = log10(elems.at(0));
+	else if (aOper == "ceil" && popStack(1, "ceil", elems))  res = ceil(elems.at(0));
+	else if (aOper == "fp"   && popStack(1, "fp", elems))    res = modf(elems.at(0), &ipart);
+	else if (aOper == "abs"  && popStack(1, "abs", elems))   res = abs(elems.at(0));
+	else if (aOper == "max"  && popStack(2, "max", elems))   res = std::max(elems.at(0), elems.at(1));
+	else if (aOper == "min"  && popStack(2, "min", elems))   res = std::min(elems.at(0), elems.at(1));
+	else if (aOper == "floor" && popStack(1, "floor", elems)) res = floor(elems.at(0));
+	else if (aOper == "round" && popStack(1, "round", elems)) res = round(elems.at(0));
+	else if (aOper == "ip"   && popStack(1, "ip", elems)) { modf(elems.at(0), &ipart); res = ipart; }
+	else return false;
+
+	mStack.emplace_back(res);
+	return true;
 }
 
 // ------------------------------------------------------------------
