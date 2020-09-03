@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
+#include <bitset>
 
 
 // ------------------------------------------------------------------
@@ -223,7 +224,7 @@ void Rpn::macroDefine(const std::vector<std::string>& elements) {
 			std::cout << s.first << ": " << s.second << std::endl;
 }
 
-bool Rpn::popStack(int reqSize, const std::string& aError, std::vector<double>& outElems) {
+bool Rpn::popStack(unsigned int reqSize, const std::string& aError, std::vector<double>& outElems) {
 	if (mStack.size() < reqSize)
 		throw (std::string("(") + aError + ") stack error").c_str();
 

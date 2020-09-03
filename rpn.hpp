@@ -29,7 +29,7 @@ class Rpn {
 	int mRepeat = 1;
 	bool hasVariable(std::string& aStr);
 	bool isVariable(const std::string& aStr, double& value);
-	bool popStack(int reqSize, const std::string& aError, std::vector<double>& outElems);
+	bool popStack(unsigned int reqSize, const std::string& aError, std::vector<double>& outElems);
 
 	std::string varPrefix() { return std::string((stdoutTerminal ? CLR : "")) + "[ " + (stdoutTerminal ? RST : ""); };
 	std::string varSuffix() { return std::string((stdoutTerminal ? CLR : "")) + "]" + (stdoutTerminal ? RST : ""); };

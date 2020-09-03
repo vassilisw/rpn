@@ -2,6 +2,7 @@
 #include "helpers.hpp"
 #include "rpn.hpp"
 #include <iostream>
+#include <cstring>
 
 
 void usage() {

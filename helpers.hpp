@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
+
 
 inline void initRandom() {
 	srand(time(NULL));
@@ -153,7 +157,7 @@ inline std::string factorial(int num) {
 	res.push_back(1);
 	int carry = 0;
 	for (int i = 2; i <= num; i++) {
-		for(int j = 0; j < res.size(); j++) {
+		for(unsigned int j = 0; j < res.size(); j++) {
 			int tmp = res[j] * i;
 			res[j] = (tmp+carry) % 10 ;
 			carry = (tmp+carry) / 10;
