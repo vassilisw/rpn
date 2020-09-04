@@ -23,6 +23,7 @@ inline bool stdinIsTerminal() {
 	return isatty(fileno(stdin));
 }
 
+// multiplatform file system separator
 inline char separator() {
 	#ifdef _WIN32
 	return '\\';
@@ -31,6 +32,7 @@ inline char separator() {
 	#endif
 }
 
+// multiplatform file system home directory
 inline std::string userDir() {
 	char homedir[PATH_MAX];
 	#ifdef _WIN32
@@ -99,19 +101,9 @@ inline std::vector<T> popNVectorElements(std::vector<T>& vec, int aCount) {
 	vec.erase(vec.end() - aCount, vec.end());
 
 	return res;
-
-	// auto v1 = *std::prev(mStack.end(), 2);
-	// auto v2 = *std::prev(mStack.end(), 1);
-	// mStack.erase(mStack.end() - 2, mStack.end());
-	// mStack.emplace_back(v1 + v2);
-
-	// auto v1 = mStack.back();
-	// mStack.pop_back();
-	// auto v2 = mStack.back();
-	// mStack.pop_back();
-	// mStack.emplace_back(v1 + v2);
 }
 
+// decimal to binary form
 inline long long fromBin(long long n) {
 	long long factor = 1;
 	long long total = 0;
@@ -125,6 +117,7 @@ inline long long fromBin(long long n) {
 	return total;
 }
 
+// handle user input base (hex, dec, etc)
 inline std::string handleInputBase(const std::string& aStr) {
 	if (aStr.size() < 3) return aStr;
 

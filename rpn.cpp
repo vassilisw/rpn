@@ -292,7 +292,7 @@ bool Rpn::operation(const std::string& aOper) {
 // public
 
 Rpn::Rpn() {
-	std::cout << std::setprecision(7);
+	std::cout << std::setprecision(8);
 
 	mFunctions.emplace("cla",    &Rpn::fCla);
 	mFunctions.emplace("clr",    &Rpn::fClr);
@@ -331,7 +331,7 @@ void Rpn::presentPrompt() {
 		std::cout << varPrefix();
 	std::string eline = mVerticalStack ? "\n" : " ";
 
-	// print the stacks
+	// print the variables
 	for (auto& n : mVars) {
 		if (mMode == rpnmDec)
 			std::cout << std::dec << n.first << "=" << n.second << eline;
@@ -348,6 +348,7 @@ void Rpn::presentPrompt() {
 	if (mVars.size() && !mVerticalStack)
 		std::cout << varSuffix() << eline;
 
+	// print the numbers stack
 	for (auto& n : mStack) {
 		if (mMode == rpnmDec)
 			std::cout << std::dec << n << eline;

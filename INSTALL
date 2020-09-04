@@ -7,6 +7,6 @@ Use one of the following to compile:
   $ make CXX=clang++
 
 and/or to install:
-  $ make install
+  $ sudo make install
 
 for FreeBSD use `gmake` instead

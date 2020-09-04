@@ -109,12 +109,12 @@ int main(int argc, char *argv[]) {
 	if (fileExists(rcfile))
 		executeFile(rpn, rcfile);
 
+	// is interactice or input pipe
 	if (argc == 1 || !stdinIsTerminal()) {
-		// i.e. interactice or pipe input
 		loopParse(rpn);
 	}
+	// one shot
 	else {
-		// one shot
 		try {
 			rpn.parse((joinStrings(std::vector<std::string>(argv + 1, argv + argc), " ")));
 			rpn.presentPrompt();
