@@ -32,6 +32,26 @@ void onKeyPressed(std::string& outStr, int key, void* aRpn/*Rpn* aRpn*/) {
 	if (key == KEY_DOWN) {
 		outStr = History.at(HistoryIndex);
 	}
+	else
+	if (key == KEY_TAB) {
+		static long tabIndex = 0;
+		static std::string tabSearch("XXX");
+		if (!outStr.empty() && outStr.find(tabSearch) == std::string::npos) {
+			tabIndex = 0;
+			tabSearch = outStr;
+		}
+
+		auto& v = ((Rpn*)aRpn)->availableCommands;
+		auto it = v.begin() + tabIndex;
+		for (; it != v.end(); ++it)
+			if ((*it).find(tabSearch) != std::string::npos) break;
+
+		if (it != v.end()) {
+			outStr = *it;
+			tabIndex = it - v.begin() + 1; // std::distance(vec.begin(), it);
+		}
+		else tabIndex = 0;
+	}
 	else {
 		outStr = "";
 	}

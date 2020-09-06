@@ -320,6 +320,16 @@ Rpn::Rpn() {
 	mFunctions.emplace("keys",   &Rpn::foPrintKeywords);
 	mFunctions.emplace("help",   &Rpn::foHelp);
 
+	// populate the available commands
+	availableCommands = std::move(std::vector<std::string> {
+		CMD_MACRO, CMD_EXIT, "%", "+", "-", "*", "/", "!=", "++", "--", "!", "~",
+		"&", "|", "^", "<<", ">>", "<", ">", "&&", "||", "^^", "<=", "==", ">=",
+		"pow", "acos", "asin", "atan", "cos", "cosh", "sin", "sinh", "tanh", "exp",
+		"sqrt", "ln", "log", "ceil", "fp", "abs", "max", "min", "floor", "round", "ip" });
+	availableCommands.reserve(70);
+	for (auto& it : mFunctions)
+		availableCommands.emplace_back(it.first);
+
 }
 
 Rpn::~Rpn() {

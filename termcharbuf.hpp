@@ -4,6 +4,7 @@
 #include <iostream>
 #include <termios.h>
 
+#define KEY_TAB    (0x09)
 #define KEY_BK     (0x7f)
 #define KEY_ENTER  (0x0a)
 #define KEY_ESC    (0x1b)
@@ -51,9 +52,23 @@ std::string wsdGetline(KeyPressedCallback cb, void* pPassThrough) {
 	char c;
 	bool esc = false;
 	bool enter = false;
+
+	// lambda for convenience:
+	auto handleArrowKeys = [pPassThrough, &cb, &esc, &res] (int key) {
+		std::string strValue = res;
+		esc = false;
+		std::cout << CLR_LINE << std::flush;
+		cb(strValue, key, pPassThrough);
+		res = strValue;
+		std::cout << strValue;
+	};
+
 	// res holds the string until enter key is pressed
 	while (!enter && ((c = pbuf->sbumpc()) != EOF)) {
 		switch (c) {
+			case KEY_TAB:
+				handleArrowKeys(KEY_TAB);
+				break;
 			case KEY_BK:
 				if (res.size()) {
 					std::cout << DelBuf;
@@ -73,17 +88,6 @@ std::string wsdGetline(KeyPressedCallback cb, void* pPassThrough) {
 				res += c;
 				// check key sequencies
 				if (res.size() > 2) {
-					std::string strValue;
-
-					// lambda for convenience:
-					auto handleArrowKeys = [pPassThrough, &cb, &esc, &strValue, &res] (int key) {
-						esc = false;
-						std::cout << CLR_LINE << std::flush;
-						cb(strValue, key, pPassThrough);
-						res = strValue;
-						std::cout << strValue;
-					};
-
 					if (std::equal(res.end()-3, res.end(), keyUp)) {
 						handleArrowKeys(KEY_UP);
 					}

@@ -87,6 +87,8 @@ class Rpn {
 	bool interactive = false;
 	// stdout is the terminal (vs pipe)
 	bool stdoutTerminal = true;
+	// all avalable commands for tab use, help, etc
+	std::vector<std::string> availableCommands;
 
 	// gain attention just in case
 	Rpn(const Rpn&) = delete;
