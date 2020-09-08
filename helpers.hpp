@@ -85,7 +85,9 @@ inline std::string joinStrings(const std::vector<std::string>& elements, const s
 			std::stringstream ss;
 			for (const auto& s : elements)
 				ss << s << separator;
-			return ss.str();
+			auto res = ss.str();
+			res.resize(res.size() - separator.size());
+			return res;
 	}
 }
 
