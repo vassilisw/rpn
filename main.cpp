@@ -34,11 +34,21 @@ void onKeyPressed(std::string& outStr, int key, void* aRpn/*Rpn* aRpn*/) {
 	}
 	else
 	if (key == KEY_TAB) {
+		// tab applies on the last typed word
+		std::vector<std::string> userWords = splitString(outStr, ' ');
+		std::string userLastWord;
+		if (userWords.size()) {
+			userLastWord = userWords.back();
+			userWords.pop_back();
+		}
+		else userLastWord = "";
+
+		// ---
 		static long tabIndex = 0;
 		static std::string tabSearch("XXX");
-		if (!outStr.empty() && outStr.find(tabSearch) == std::string::npos) {
+		if (!userLastWord.empty() && userLastWord.find(tabSearch) == std::string::npos) {
 			tabIndex = 0;
-			tabSearch = outStr;
+			tabSearch = userLastWord;
 		}
 
 		auto& v = ((Rpn*)aRpn)->availableCommands;
@@ -47,10 +57,14 @@ void onKeyPressed(std::string& outStr, int key, void* aRpn/*Rpn* aRpn*/) {
 			if ((*it).find(tabSearch) != std::string::npos) break;
 
 		if (it != v.end()) {
-			outStr = *it;
+			userLastWord = *it;
 			tabIndex = it - v.begin() + 1; // std::distance(vec.begin(), it);
 		}
 		else tabIndex = 0;
+		// ---
+
+		auto d = userWords.size() ? " " : "";
+		outStr = joinStrings(userWords, " ") + d + userLastWord;
 	}
 	else {
 		outStr = "";
