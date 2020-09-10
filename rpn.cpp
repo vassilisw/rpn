@@ -215,8 +215,10 @@ void Rpn::macroDefine(const std::vector<std::string>& elements) {
 		macro << *it << " ";
 	}
 
-	if (!macroName.empty() && !macro.str().empty())
+	if (!macroName.empty() && !macro.str().empty()) {
 		mMacros[macroName] = macro.str();
+		availableCommands.emplace_back(macroName);
+	}
 
 	// just show defined macros
 	if (macroName.empty())
