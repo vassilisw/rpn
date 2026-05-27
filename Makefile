@@ -9,7 +9,6 @@ all: rpn
 
 rpn: $(LIB_FILES)
 	$(CXX) -o $@ $(CPPFLAGS) $(LIB_FILES)
-	# *** for the reviewer: Please check README ***
 
 install: rpn
 	install -d $(DESTDIR)$(PREFIX)/bin/
